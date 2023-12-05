@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
 import pylab as plt
@@ -43,6 +44,7 @@ provincia_filter = st.sidebar.multiselect('Seleccionar Provincia(s)', pernoctaci
 tipo_datos_filter = st.sidebar.multiselect('Seleccionar Tipo de Datos', ['Pernoctaciones', 'Viajeros', 'Total'])
 
 viajeros_pernoctaciones_filter= st.sidebar.multiselect('Seleccionar Tipo Viajeros/Pernoctaciones',['General', 'Espana', 'Extranjero'])
+
 
 # Aplicar filtros
 pernoctaciones_filtered = pernoctaciones.loc[
@@ -87,6 +89,54 @@ st.header('Tabla de Clima')
 st.write(clima_filtered[['Provincia', 'Periodo', 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']])
 
 
+sns.set_theme(style="darkgrid", palette="dark:#001146")
+
+# Diagrama de Barras para Pernoctaciones
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.barplot(data=pernoctaciones_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#001146', edgecolor='black')  # Barras azules oscuro
+plt.title('Pernoctaciones por Provincia', color='white')  # Título en blanco
+plt.xlabel('Provincia', color='white')  # Etiqueta del eje x en blanco
+plt.ylabel('Número de Pernoctaciones', color='white')  # Etiqueta del eje y en blanco
+plt.xticks(rotation=45, ha='right', color='white')  # Etiquetas del eje x en blanco
+plt.yticks(color='white')  # Etiquetas del eje y en blanco
+# Establecer el fondo del gráfico a negro
+fig.patch.set_facecolor('black')
+# Mostrar la figura en Streamlit
+st.pyplot(fig)
+
+
+# Diagrama de Caja para Temperaturas Medias
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.boxplot(data=clima_filtered, x='Provincia', y='Media_tmed', ax=ax, color='#001146', boxprops=dict(facecolor='black', color='black'), medianprops=dict(color='white'))  # Caja negra, mediana blanca
+plt.title('Distribución de Temperaturas Medias por Provincia', color='white')  # Título en blanco
+plt.xlabel('Provincia', color='white')  # Etiqueta del eje x en blanco
+plt.ylabel('Temperatura Media', color='white')  # Etiqueta del eje y en blanco
+plt.xticks(rotation=45, ha='right', color='white')  # Etiquetas del eje x en blanco
+plt.yticks(color='white')  # Etiquetas del eje y en blanco
+# Establecer el fondo del gráfico a negro
+fig.patch.set_facecolor('black')
+# Mostrar la figura en Streamlit
+st.pyplot(fig)
+
+
+
+
+
+# Crear subset antes de su uso
+viajeros_filtered_subset = viajeros_filtered[
+    viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
+# Contar la distribución de 'Residencia'
+residencia_counts = viajeros_filtered_subset['Residencia'].value_counts()
+# Crear un gráfico de pastel con los resultados
+fig, ax = plt.subplots(figsize=(8, 8))
+residencia_counts.plot.pie(autopct='%1.1f%%', labels=residencia_counts.index, ax=ax, colors=['#001146', 'black'])  # Azul oscuro y negro
+plt.title('Distribución de Tipo de Residencia de Viajeros', color='white')  # Título en blanco
+# Establecer el fondo del gráfico a negro
+fig.patch.set_facecolor('black')
+# Mostrar la figura en Streamlit
+st.pyplot(fig)
+
+
     
 # Mapa interactivo de Foursquare
 foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
@@ -97,12 +147,9 @@ st.markdown(iframe_html, unsafe_allow_html=True)
 
 
 
-# Gráfico de barras para Pernoctaciones por Provincia
-plt.figure(figsize=(12, 6))
-sns.barplot(data=pernoctaciones_filtered, x='Provincia', y='Viajeros_Pernoctaciones', ci=None)
-plt.title('Pernoctaciones por Provincia')
-plt.xticks(rotation=45, ha='right')
-st.pyplot();
+
+
+
 
 
 
