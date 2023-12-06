@@ -9,6 +9,7 @@ import webbrowser
 import base64
 import io
 
+
 # Cargar datos
 pernoctaciones = pd.read_csv('../data/ine_pernoctaciones.csv')
 viajeros = pd.read_csv('../data/ine_viajeros.csv')
@@ -41,7 +42,7 @@ fecha_inicio = pd.Timestamp(fecha_inicio)
 fecha_fin = pd.Timestamp(fecha_fin)
 
 provincia_filter = st.sidebar.multiselect('Seleccionar Provincia(s)', pernoctaciones['Provincia'].unique())
-tipo_datos_filter = st.sidebar.multiselect('Seleccionar Tipo de Datos', ['Pernoctaciones', 'Viajeros', 'Total'])
+tipo_datos_filter = st.sidebar.multiselect('Seleccionar Tipo de Datos', ['Pernoctaciones', 'Viajeros'])
 
 viajeros_pernoctaciones_filter= st.sidebar.multiselect('Seleccionar Tipo Viajeros/Pernoctaciones',['General', 'Espana', 'Extranjero'])
 
@@ -62,11 +63,7 @@ clima_filtered = clima.loc[
     (clima['Periodo'] >= fecha_inicio) & 
     (clima['Periodo'] <= fecha_fin)
 ]
-total_filtered = total.loc[
-    (total['Totales_Territoriales'].isin(provincia_filter)) & 
-    (total['Periodo'] >= fecha_inicio) & 
-    (total['Periodo'] <= fecha_fin)
-]
+
 
 # Visualizar datos
 st.header('Tabla de Pernoctaciones, Viajeros o Total según selección')
@@ -75,14 +72,10 @@ if 'Pernoctaciones' in tipo_datos_filter:
     st.write(pernoctaciones_filtered[['Provincia','Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
     
 elif 'Viajeros' in tipo_datos_filter:
-    viajeros_filtered_subset = viajeros_filtered[
-        viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
-    st.write(viajeros_filtered_subset[['Provincia','Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
+    viajeros_filtered_subset = viajeros_filtered[viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
+    st.write(viajeros_filtered_subset[['Provincia', 'Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
     
-elif 'Total' in tipo_datos_filter:
-    total_filtered_with_additional_filter = total_filtered[
-        total_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
-    st.write(total_filtered_with_additional_filter)
+
 
 
 st.header('Tabla de Clima')
@@ -91,18 +84,36 @@ st.write(clima_filtered[['Provincia', 'Periodo', 'Media_tmed', 'Media_prec', 'Me
 
 sns.set_theme(style="darkgrid", palette="dark:#001146")
 
-# Diagrama de Barras para Pernoctaciones
+
+
+
+
+
 fig, ax = plt.subplots(figsize=(12, 6))
-sns.barplot(data=pernoctaciones_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#001146', edgecolor='black')  # Barras azules oscuro
-plt.title('Pernoctaciones por Provincia', color='white')  # Título en blanco
-plt.xlabel('Provincia', color='white')  # Etiqueta del eje x en blanco
-plt.ylabel('Número de Pernoctaciones', color='white')  # Etiqueta del eje y en blanco
-plt.xticks(rotation=45, ha='right', color='white')  # Etiquetas del eje x en blanco
-plt.yticks(color='white')  # Etiquetas del eje y en blanco
+
+# Verificar qué tipo de datos se ha seleccionado y crear barras correspondientes
+if 'Pernoctaciones' in tipo_datos_filter:
+    sns.barplot(data=pernoctaciones_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#ADD8E6', edgecolor='black', label='Pernoctaciones')
+if 'Viajeros' in tipo_datos_filter:
+    sns.barplot(data=viajeros_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#001146', edgecolor='black', label='Viajeros')
+
+# Configuración del gráfico
+plt.title(f'Comparación de {", ".join(tipo_datos_filter)} por Provincia', color='white')
+plt.xlabel('Provincia', color='white')
+plt.ylabel('Cantidad', color='white')
+plt.xticks(rotation=45, ha='right', color='white')
+plt.yticks(color='white')
+plt.legend()  # Mostrar leyenda
+
 # Establecer el fondo del gráfico a negro
 fig.patch.set_facecolor('black')
+
 # Mostrar la figura en Streamlit
 st.pyplot(fig)
+
+
+
+
 
 
 # Diagrama de Caja para Temperaturas Medias
@@ -144,7 +155,6 @@ foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9
 iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
 # Mostrar el iframe en Streamlit
 st.markdown(iframe_html, unsafe_allow_html=True)
-
 
 
 
