@@ -82,6 +82,11 @@ st.header('Tabla de Clima')
 st.write(clima_filtered[['Provincia', 'Periodo', 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']])
 
 
+
+
+
+
+
 sns.set_theme(style="darkgrid", palette="dark:#001146")
 
 
@@ -90,13 +95,11 @@ sns.set_theme(style="darkgrid", palette="dark:#001146")
 
 
 fig, ax = plt.subplots(figsize=(12, 6))
-
 # Verificar qué tipo de datos se ha seleccionado y crear barras correspondientes
 if 'Pernoctaciones' in tipo_datos_filter:
     sns.barplot(data=pernoctaciones_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#ADD8E6', edgecolor='black', label='Pernoctaciones')
 if 'Viajeros' in tipo_datos_filter:
     sns.barplot(data=viajeros_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#001146', edgecolor='black', label='Viajeros')
-
 # Configuración del gráfico
 plt.title(f'Comparación de {", ".join(tipo_datos_filter)} por Provincia', color='white')
 plt.xlabel('Provincia', color='white')
@@ -104,10 +107,8 @@ plt.ylabel('Cantidad', color='white')
 plt.xticks(rotation=45, ha='right', color='white')
 plt.yticks(color='white')
 plt.legend()  # Mostrar leyenda
-
 # Establecer el fondo del gráfico a negro
 fig.patch.set_facecolor('black')
-
 # Mostrar la figura en Streamlit
 st.pyplot(fig)
 
@@ -118,17 +119,18 @@ st.pyplot(fig)
 
 # Diagrama de Caja para Temperaturas Medias
 fig, ax = plt.subplots(figsize=(10, 6))
-sns.boxplot(data=clima_filtered, x='Provincia', y='Media_tmed', ax=ax, color='#001146', boxprops=dict(facecolor='black', color='black'), medianprops=dict(color='white'))  # Caja negra, mediana blanca
-plt.title('Distribución de Temperaturas Medias por Provincia', color='white')  # Título en blanco
-plt.xlabel('Provincia', color='white')  # Etiqueta del eje x en blanco
-plt.ylabel('Temperatura Media', color='white')  # Etiqueta del eje y en blanco
-plt.xticks(rotation=45, ha='right', color='white')  # Etiquetas del eje x en blanco
-plt.yticks(color='white')  # Etiquetas del eje y en blanco
+# Diagrama de Caja para Temperaturas Medias
+sns.boxplot(data=clima_filtered, x='Provincia', y='Media_tmed', ax=ax, color='#800080', boxprops=dict(facecolor='#800080', color='#800080'), medianprops=dict(color='white'))  # Caja morada, mediana blanca
+# Configuración del gráfico
+plt.title('Distribución de Temperaturas Medias por Provincia', color='white')
+plt.xlabel('Provincia', color='white')
+plt.ylabel('Temperatura Media', color='white')
+plt.xticks(rotation=45, ha='right', color='white')
+plt.yticks(color='white')
 # Establecer el fondo del gráfico a negro
 fig.patch.set_facecolor('black')
 # Mostrar la figura en Streamlit
 st.pyplot(fig)
-
 
 
 
