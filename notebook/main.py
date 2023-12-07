@@ -1,15 +1,10 @@
 import streamlit as st
 import pandas as pd
-import streamlit as st
 import plotly.express as px
-import plotly.graph_objects as go
-import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
 import pylab as plt
-import webbrowser
-import base64
-import io
+
 
 # Cargar datos
 pernoctaciones = pd.read_csv('../data/ine_pernoctaciones.csv')
@@ -22,8 +17,8 @@ st.set_page_config(page_title="Análisis de Datos de Turismo y Clima", page_icon
 
 #Configuración colores en la página
 background_color = "#262730"
-border_color = "#0068c9"
-selected_color = "#83c9ff"
+border_color = "#262730"
+selected_color = "#7C32ED"
 text_color = "#FFFFFF"
 
 custom_css = f"""
@@ -199,7 +194,7 @@ elif page == "🔍Exploración":
     # Diagrama de Caja para 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', o 'Media_tmax' según selección en el filtro
     if clima_tipo_datos_filter in ['Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']:
     # Creación de un diagrama de caja con los resultados
-        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#ffabab'], points="all",
+        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#32D7ED'],
                      title=f'Distribución de {clima_tipo_datos_filter} por Provincia')
 
         # Configuración de la figura
@@ -208,7 +203,7 @@ elif page == "🔍Exploración":
             yaxis_title=clima_tipo_datos_filter,
             paper_bgcolor='rgba(14, 17, 23, 1)',
             plot_bgcolor='rgba(234, 234, 242, 1)',
-            xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
+            xaxis=dict(gridcolor='white', tickangle=45),  # Color de la cuadrícula en el eje x
             yaxis=dict(gridcolor='white'))
         
         fig.update_traces(boxmean="sd",line_color='black')
