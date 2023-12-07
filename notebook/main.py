@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
@@ -16,11 +18,25 @@ viajeros = pd.read_csv('../data/ine_viajeros.csv')
 total = pd.read_csv('../data/ine_total.csv')
 clima = pd.read_csv('../data/clima.csv')
 
+
+
 # Configuración de página
 st.set_page_config(
     page_title="Análisis de Datos de Turismo y Clima",
     page_icon="📊"
+
 )
+
+
+
+
+
+
+
+
+
+
+
 
 page = st.sidebar.radio("Selecciona una página", ["Homepage", "Exploration"])
 
@@ -79,65 +95,141 @@ elif page == "Exploration":
     # Visualizar datos
 
     col1, col2 = st.columns([1, 1]) 
-    col1.header('Tabla de Pernoctaciones, Viajeros o Total según selección')
+    col1.header('Tabla de Pernoctaciones, Viajeros o Total')
     if 'Pernoctaciones' in tipo_datos_filter:
         col1.write(pernoctaciones_filtered[['Provincia','Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
     elif 'Viajeros' in tipo_datos_filter:
         viajeros_filtered_subset = viajeros_filtered[viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
         col1.write(viajeros_filtered_subset[['Provincia', 'Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
 
-    col1.header('Tabla de Clima')
-    col1.write(clima_filtered[['Provincia', 'Periodo', 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']])
+    col2.header('Tabla de Clima')
+    col2.write(clima_filtered[['Provincia', 'Periodo', 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']])
 
 
 
 
 
+    altura_graficos = 400
 
-    col2.header('Gráficos de Pernoctaciones y Viajeros')
     sns.set_theme(style="darkgrid", palette="dark:#001146")
-    fig, ax = plt.subplots(figsize=(12, 6))
-    # Verificar qué tipo de datos se ha seleccionado y crear barras correspondientes
+    
+    
+    
+    
+    total_pernoctaciones = pernoctaciones_filtered.groupby('Provincia')['Total'].sum().reset_index()
+    total_viajeros = viajeros_filtered.groupby('Provincia')['Total'].sum().reset_index()
+
+    # Crear figura de Plotly Express
+    fig = px.bar()
+    # Verificar qué tipo de datos se ha seleccionado y agregar barras correspondientes
     if 'Pernoctaciones' in tipo_datos_filter:
-        sns.barplot(data=pernoctaciones_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#45E3E2', edgecolor='black', label='Pernoctaciones')
+        fig.add_bar(x=total_pernoctaciones['Provincia'], y=total_pernoctaciones['Total'],
+                    name='Pernoctaciones', marker_color='#45E3E2', marker_line_color='black', marker_line_width=1)
     if 'Viajeros' in tipo_datos_filter:
-        sns.barplot(data=viajeros_filtered, x='Provincia', y='Total', ci=None, ax=ax, color='#1500FF', edgecolor='black', label='Viajeros')
-    # Configuración del gráfico
-    plt.title(f'Comparación de {", ".join(tipo_datos_filter)} por Provincia', color='white')
-    plt.xlabel('Provincia', color='white')
-    plt.ylabel('Cantidad', color='white')
-    plt.xticks(rotation=45, ha='right', color='white')
-    plt.yticks(color='white')
-    plt.legend()  # Mostrar leyenda
-    # Establecer el fondo del gráfico a negro
-    fig.patch.set_facecolor('black')
+        fig.add_bar(x=total_viajeros['Provincia'], y=total_viajeros['Total'],
+                    name='Viajeros', marker_color='#1500FF', marker_line_color='black', marker_line_width=1)
+    # Configuración de la figura
+    fig.update_layout(
+        title=f'Total Sumatorio de {", ".join(tipo_datos_filter)} por Provincia',
+        xaxis_title='Provincia',
+        yaxis_title='Total Sumatorio',
+        paper_bgcolor='rgba(14, 17, 23, 1)',
+        plot_bgcolor='rgba(234, 234, 242, 1)',
+        xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
+        yaxis=dict(gridcolor='white'),
+    )
+
     # Mostrar la figura en Streamlit
-    col2.pyplot(fig)
+    col1.plotly_chart(fig)
 
 
 
-
+    
+    
 
 
     # Diagrama de Caja para Temperaturas Medias
     # Verificar si el filtro es 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', o 'Media_tmax'
     if clima_tipo_datos_filter in ['Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']:
-        # Crear un diagrama de caja con los resultados
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.boxplot(data=clima_filtered, x='Provincia', y=clima_tipo_datos_filter, ax=ax, color='#FCB714', boxprops=dict(facecolor='#FCB714', color='#FCB714'), medianprops=dict(color='white'))
-        # Ajustes del gráfico
-        plt.title(f'Distribución de {clima_tipo_datos_filter} por Provincia', color='white')  # Título en blanco
-        plt.xlabel('Provincia', color='white')
-        plt.ylabel(clima_tipo_datos_filter, color='white')
-        plt.xticks(rotation=45, ha='right', color='white')
-        plt.yticks(color='white')
-        # Establecer el fondo del gráfico a negro
-        fig.patch.set_facecolor('black')
+    # Crear un diagrama de caja con los resultados
+        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#1500FF'], points="all", title=f'Distribución de {clima_tipo_datos_filter} por Provincia')
+
+        # Configuración de la figura
+        fig.update_layout(
+            xaxis_title='Provincia',
+            yaxis_title=clima_tipo_datos_filter,
+            paper_bgcolor='rgba(14, 17, 23, 1)',
+            plot_bgcolor='rgba(234, 234, 242, 1)',
+            xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
+            yaxis=dict(gridcolor='white'),
+        )
+        
+        fig.update_traces(marker=dict(color='#7936D9'), boxmean="sd")
+    
         # Mostrar la figura en Streamlit
-        col2.pyplot(fig)
+        col2.plotly_chart(fig)
     else:
         # Si el filtro no es válido, mostrar un mensaje o realizar otra acción
         col2.write("Selecciona un tipo de datos de clima válido para visualizar el diagrama de caja.")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    # Gráfico de Líneas para Pernoctaciones a lo largo de los meses
+    
+    # Crear un gráfico de líneas con los resultados
+    fig = px.line(pernoctaciones_filtered, x='Periodo', y='Total', color='Provincia', title='Pernoctaciones a lo largo de los meses por Provincia')
+
+    # Configuración de la figura
+    fig.update_layout(
+        xaxis_title='Mes',
+        yaxis_title='Cantidad',
+        paper_bgcolor='rgba(14, 17, 23, 1)',
+        plot_bgcolor='rgba(234, 234, 242, 1)',
+        xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
+        yaxis=dict(gridcolor='white'),
+    )
+
+    # Cambiar el fondo del gráfico
+    fig.update_layout(
+        paper_bgcolor='rgba(14, 17, 23, 1)',
+        plot_bgcolor='rgba(234, 234, 242, 1)',
+        xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
+        yaxis=dict(gridcolor='white'),
+    )
+
+    # Mostrar la figura en Streamlit
+    col1.plotly_chart(fig)
+        
+        
+        
+        
+        
+        
+        
+    treemap_data = pd.DataFrame()
+    if not pernoctaciones_filtered.empty:
+        treemap_data = pernoctaciones_filtered.groupby('Provincia')['Total'].sum().reset_index()
+        title = f'Treemap: Ranking de Provincias por Pernoctaciones ({fecha_inicio} - {fecha_fin})'
+    elif not viajeros_filtered.empty:
+        treemap_data = viajeros_filtered.groupby('Provincia')['Total'].sum().reset_index()
+        title = f'Treemap: Ranking de Provincias por Viajeros ({fecha_inicio} - {fecha_fin})'
+    else:
+        st.warning("No hay datos disponibles para los filtros seleccionados")
+
+    # Crear el treemap
+    if not treemap_data.empty:
+        fig = px.treemap(treemap_data, path=['Provincia'], values='Total', title=title)
+        col2.plotly_chart(fig)    
+        
+        
 
 
 
@@ -145,26 +237,25 @@ elif page == "Exploration":
 
     # Crear subset antes de su uso
     viajeros_filtered_subset = viajeros_filtered[
-        viajeros_filtered['Residencia'].isin(['Espana', 'Extranjero'])]
+    viajeros_filtered['Residencia'].isin(['Espana', 'Extranjero'])]
+
     # Verificar si el filtro es 'España' o 'Extranjero'
     if 'Espana' in viajeros_pernoctaciones_filter or 'Extranjero' in viajeros_pernoctaciones_filter:
         # Obtener el total de residentes en España y en el extranjero
         total_espana = viajeros_filtered_subset[viajeros_filtered_subset['Residencia'] == 'Espana']['Total'].sum()
         total_extranjero = viajeros_filtered_subset[viajeros_filtered_subset['Residencia'] == 'Extranjero']['Total'].sum()
-        # Colores para el gráfico de pastel
-        colores = ['#4C0035', '#B72F15']
+
         # Crear un gráfico de pastel con los resultados
-        fig, ax = plt.subplots(figsize=(8, 8))
-        plt.pie([total_espana, total_extranjero], labels=['España', 'Extranjero'], autopct='%1.1f%%', colors=colores, textprops=dict(color='white'))
-        # Ajustes del gráfico
-        plt.title('Distribución de Tipo de Residencia de Viajeros', color='white')  # Título en blanco
-        # Establecer el fondo del gráfico a negro
-        fig.patch.set_facecolor('black')
+        fig = px.pie(names=['España', 'Extranjero'], values=[total_espana, total_extranjero], title='Distribución de Tipo de Residencia de Viajeros', color_discrete_sequence=['#4C0035', '#B72F15'])
+
+        # Configuración de la figura
+        fig.update_layout(
+            paper_bgcolor='rgba(14, 17, 23, 1)',
+            plot_bgcolor='rgba(14, 17, 23, 1)',
+        )
+
         # Mostrar la figura en Streamlit
-        col2.pyplot(fig)  
-        # Mostrar el total de residentes en España y en el extranjero
-        col2.write(f"Total de residentes en España: {total_espana}")
-        col2.write(f"Total de residentes en el Extranjero: {total_extranjero}")
+        col2.plotly_chart(fig)
     else:
         # Si el filtro no es 'España' ni 'Extranjero', mostrar un mensaje o realizar otra acción
         col2.write("Selecciona 'España' o 'Extranjero' en el filtro para visualizar el gráfico de pastel.")
