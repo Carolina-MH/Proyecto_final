@@ -6,17 +6,17 @@ Objetivo: Explorar la Evolución y Resiliencia del Turismo en España
 
 Mi misión era desentrañar las complejidades detrás del turismo español a lo largo de la última década, centrándome en preguntas clave:
 
-1.Evolución Histórica: ¿Cómo ha cambiado el turismo desde 2014 hasta ahora?
+`1.Evolución Histórica:` ¿Cómo ha cambiado el turismo desde 2014 hasta ahora?
 
-2.Tendencia pernoctaciones y viajeros📉🗺️: ¿Cuáles son los patrones en pernoctaciones y la llegada de viajeros en las distintas provincias de España?
+`2.Tendencia pernoctaciones y viajeros📉🗺️:` ¿Cuáles son los patrones en pernoctaciones y la llegada de viajeros en las distintas provincias de España?
 
-3.Impacto del COVID-19: ¿Cómo afectó la pandemia al turismo español? ¿Cuáles fueron las regiones más afectadas y cómo han evolucionado?
+`3.Impacto del COVID-19:` ¿Cómo afectó la pandemia al turismo español? ¿Cuáles fueron las regiones más afectadas y cómo han evolucionado?
 
-4.Correlación Clima-Turismo: ¿Existe una relación entre las condiciones climáticas y la actividad turística?
+`4.Correlación Clima-Turismo:` ¿Existe una relación entre las condiciones climáticas y la actividad turística?
 
-5.Recuperación Post-COVID: ¿Qué provincias están mostrando signos de recuperación?
+`5.Recuperación Post-COVID:` ¿Qué provincias están mostrando signos de recuperación?
 
-6. Comparación Pre y Post-COVID 🔄📊: ¿Qué insights se pueden extraer al comparar datos antes y después del COVID-19?
+`6.Comparación Pre y Post-COVID 🔄📊:` ¿Qué insights se pueden extraer al comparar datos antes y después del COVID-19?
 
 ## En Busca de Respuestas 🤔
 
@@ -34,7 +34,7 @@ En el año 2020, mi atención se centró en las cifras que documentaban el impac
 
 En la fase post-COVID, las cifras mostraron señales alentadoras de recuperación. Algunas provincias comenzaron a mostrar indicios positivos, sugiriendo una resiliencia notable en la industria turística. Además, nuevas tendencias empezaron a dibujar el perfil del turismo actual en España. Estas tendencias sugieren una adaptabilidad y transformación continua en respuesta a las cambiantes condiciones del mercado y las preferencias de los viajeros.
 
-![grafico](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/grafico_diagrama.jpg)
+![grafico](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/mapa.jpg)
 
 ## Detrás de los Números 📈🌦️
 
