@@ -1,6 +1,6 @@
 # Explorando tendencias y patrones del turimo español📊🌍
 
-![head](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/home.mp4)
+![head](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/gif.gif)
 
 Objetivo: Explorar la Evolución y Resiliencia del Turismo en España
 
