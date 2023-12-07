@@ -105,13 +105,11 @@ elif page == "🔥Mapa":
     a turistas de placer como a aquellos en busca de oportunidades laborales.""")
     
 elif page == "🔍Exploración":
-    st.title('1. Tendencias Temporales: Clima y Turismo')    
-
+    
+    st.title('Explorando tendencias y patrones temporales📊')    
     st.sidebar.title('Filtros')
 
-
-
-    # Filtros
+    #Creación de filtros
     clima['Periodo'] = pd.to_datetime(clima['Periodo'])
     pernoctaciones['Periodo'] = pd.to_datetime(pernoctaciones['Periodo'])
     viajeros['Periodo'] = pd.to_datetime(viajeros['Periodo'])
@@ -119,97 +117,90 @@ elif page == "🔍Exploración":
 
     fecha_inicio = st.sidebar.date_input('Seleccionar Fecha de Inicio', clima['Periodo'].min())
     fecha_fin = st.sidebar.date_input('Seleccionar Fecha de Fin', clima['Periodo'].max())
-
-    # Convierte fecha_inicio y fecha_fin a Timestamp
+    # Convertir fecha_inicio y fecha_fin a Timestamp
     fecha_inicio = pd.Timestamp(fecha_inicio)
     fecha_fin = pd.Timestamp(fecha_fin)
 
     provincia_filter = st.sidebar.multiselect('Seleccionar Provincia(s)', pernoctaciones['Provincia'].unique())
     tipo_datos_filter = st.sidebar.multiselect('Seleccionar Tipo de Datos', ['Pernoctaciones', 'Viajeros'])
     viajeros_pernoctaciones_filter= st.sidebar.multiselect('Seleccionar Tipo Viajeros/Pernoctaciones',['Espana', 'Extranjero'])
-    clima_tipo_datos_filter = st.sidebar.selectbox('Seleccionar Tipo de Datos de Clima', ['Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax'])
+    clima_tipo_datos_filter = st.sidebar.selectbox('Seleccionar Tipo de Datos de Clima', ['Media_tmed', 'Media_prec', 'Media_sol',
+                                                                                          'Media_tmin', 'Media_tmax'])
     
 
 
-    # Aplicar filtros
-    pernoctaciones_filtered = pernoctaciones.loc[
-        (pernoctaciones['Provincia'].isin(provincia_filter)) & 
+    #Aplicación de los filtros creados
+    pernoctaciones_filtered = pernoctaciones.loc[(pernoctaciones['Provincia'].isin(provincia_filter)) & 
         (pernoctaciones['Periodo'] >= fecha_inicio) & 
-        (pernoctaciones['Periodo'] <= fecha_fin)
-    ]
-    viajeros_filtered = viajeros.loc[
-        (viajeros['Provincia'].isin(provincia_filter)) & 
+        (pernoctaciones['Periodo'] <= fecha_fin)]
+    
+    viajeros_filtered = viajeros.loc[(viajeros['Provincia'].isin(provincia_filter)) & 
         (viajeros['Periodo'] >= fecha_inicio) & 
-        (viajeros['Periodo'] <= fecha_fin)
-    ]
-    clima_filtered = clima.loc[
-        (clima['Provincia'].isin(provincia_filter)) & 
+        (viajeros['Periodo'] <= fecha_fin)]
+    
+    clima_filtered = clima.loc[(clima['Provincia'].isin(provincia_filter)) & 
         (clima['Periodo'] >= fecha_inicio) & 
-        (clima['Periodo'] <= fecha_fin)
-    ]
+        (clima['Periodo'] <= fecha_fin)]
     
  
-    # Visualizar datos
-
+    # Visualización de los datos datos
+    #Creación de dos columnas en streamlit para ordenar los gráficos y aprovechar espacio
     col1, col2 = st.columns([1, 1]) 
+    
+    #Mostrar DF de los datos del INE según sea pernotaciones, viajeros o si es la selección de los dos
     col1.header('Tabla de Pernoctaciones, Viajeros o Total')
+    
     if 'Pernoctaciones' in tipo_datos_filter:
         col1.write(pernoctaciones_filtered[['Provincia','Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
+        
     elif 'Viajeros' in tipo_datos_filter:
         viajeros_filtered_subset = viajeros_filtered[viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
         col1.write(viajeros_filtered_subset[['Provincia', 'Periodo', 'Viajeros_Pernoctaciones', 'Residencia', 'Total']])
 
+    #Mostrar DF del clima con todas las variables    
     col2.header('Tabla de Clima')
     col2.write(clima_filtered[['Provincia', 'Periodo', 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']])
 
-
-
-
-
-    altura_graficos = 400
 
     sns.set_theme(style="darkgrid", palette="dark:#001146")
     
     
     
-    
+    #Gráfico de barras
     total_pernoctaciones = pernoctaciones_filtered.groupby('Provincia')['Total'].sum().reset_index()
     total_viajeros = viajeros_filtered.groupby('Provincia')['Total'].sum().reset_index()
-
-    # Crear figura de Plotly Express
     fig = px.bar()
-    # Verificar qué tipo de datos se ha seleccionado y agregar barras correspondientes
+    
+    # Verificación qué tipo de datos se ha seleccionado y agregar barras correspondientes
     if 'Pernoctaciones' in tipo_datos_filter:
         fig.add_bar(x=total_pernoctaciones['Provincia'], y=total_pernoctaciones['Total'],
                     name='Pernoctaciones', marker_color='#83c9ff', marker_line_color='black', marker_line_width=1)
+        
     if 'Viajeros' in tipo_datos_filter:
         fig.add_bar(x=total_viajeros['Provincia'], y=total_viajeros['Total'],
                     name='Viajeros', marker_color='#0068c9', marker_line_color='black', marker_line_width=1)
-    # Configuración de la figura
-    fig.update_layout(
-        title=f'Total Sumatorio de {", ".join(tipo_datos_filter)} por Provincia',
-        xaxis_title='Provincia',
-        yaxis_title='Total Sumatorio',
-        paper_bgcolor='rgba(14, 17, 23, 1)',
-        plot_bgcolor='rgba(234, 234, 242, 1)',
-        xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
-        yaxis=dict(gridcolor='white'),
-    )
+        # Configuración de la figura
+        fig.update_layout(
+            title=f'Total Sumatorio de {", ".join(tipo_datos_filter)} por Provincia',
+            xaxis_title='Provincia',
+            yaxis_title='Total Sumatorio',
+            paper_bgcolor='rgba(14, 17, 23, 1)',
+            plot_bgcolor='rgba(234, 234, 242, 1)',
+            xaxis=dict(gridcolor='white'),
+            yaxis=dict(gridcolor='white'))
 
-    # Mostrar la figura en Streamlit
-    col1.plotly_chart(fig)
+        col1.plotly_chart(fig)
+    else:
+        col1.write("Selecciona un tipo de datos pernotaciones y/o viajeros para visualizar el gráfico apilado.")
 
+        
+        
 
-
-    
-    
-
-
-    # Diagrama de Caja para Temperaturas Medias
-    # Verificar si el filtro es 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', o 'Media_tmax'
+    # Diagrama de Caja para 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', o 'Media_tmax' según selección en el filtro
     if clima_tipo_datos_filter in ['Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']:
-    # Crear un diagrama de caja con los resultados
-        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#ffabab'], points="all", title=f'Distribución de {clima_tipo_datos_filter} por Provincia')
+    # Creación de un diagrama de caja con los resultados
+        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#ffabab'], points="all",
+                     title=f'Distribución de {clima_tipo_datos_filter} por Provincia')
 
         # Configuración de la figura
         fig.update_layout(
@@ -218,33 +209,17 @@ elif page == "🔍Exploración":
             paper_bgcolor='rgba(14, 17, 23, 1)',
             plot_bgcolor='rgba(234, 234, 242, 1)',
             xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
-            yaxis=dict(gridcolor='white'),
-        )
+            yaxis=dict(gridcolor='white'))
         
-        fig.update_traces(
-        boxmean="sd",  # Tipo de línea para la media y la línea del borde de la caja
-        line_color='black',  # Color de la línea del borde de la caja, la línea de la media y los bigotes
-    )
-    
-        # Mostrar la figura en Streamlit
+        fig.update_traces(boxmean="sd",line_color='black')
         col2.plotly_chart(fig)
     else:
-        # Si el filtro no es válido, mostrar un mensaje o realizar otra acción
         col2.write("Selecciona un tipo de datos de clima válido para visualizar el diagrama de caja.")
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    # Gráfico de Líneas para Pernoctaciones a lo largo de los meses
-    
-    # Crear un gráfico de líneas con los resultados
+         
+            
+            
+    #Gráfico de líneas para pernoctaciones a lo largo de los meses
     fig = px.line(pernoctaciones_filtered, x='Periodo', y='Total', color='Provincia', title='Pernoctaciones a lo largo de los meses por Provincia')
 
     # Configuración de la figura
@@ -254,18 +229,15 @@ elif page == "🔍Exploración":
         paper_bgcolor='rgba(14, 17, 23, 1)',
         plot_bgcolor='rgba(234, 234, 242, 1)',
         xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
-        yaxis=dict(gridcolor='white'),
-    )
+        yaxis=dict(gridcolor='white'))
 
     # Cambiar el fondo del gráfico
     fig.update_layout(
         paper_bgcolor='rgba(14, 17, 23, 1)',
         plot_bgcolor='rgba(234, 234, 242, 1)',
         xaxis=dict(gridcolor='white'),  # Color de la cuadrícula en el eje x
-        yaxis=dict(gridcolor='white'),
-    )
+        yaxis=dict(gridcolor='white'))
 
-    # Mostrar la figura en Streamlit
     col1.plotly_chart(fig)
         
         
@@ -273,18 +245,20 @@ elif page == "🔍Exploración":
         
         
         
-        
+    #Creación gráfico treemap para pernoctaciones a lo largo de los meses   
     treemap_data = pd.DataFrame()
+    
     if not pernoctaciones_filtered.empty:
         treemap_data = pernoctaciones_filtered.groupby('Provincia')['Total'].sum().reset_index()
-        title = f'Treemap: Ranking de Provincias por Pernoctaciones ({fecha_inicio} - {fecha_fin})'
+        title = f'Treemap: Ranking de Provincias por Pernoctaciones'
+        
     elif not viajeros_filtered.empty:
         treemap_data = viajeros_filtered.groupby('Provincia')['Total'].sum().reset_index()
-        title = f'Treemap: Ranking de Provincias por Viajeros ({fecha_inicio} - {fecha_fin})'
+        title = f'Treemap: Ranking de Provincias por Viajeros'
+        
     else:
         st.warning("No hay datos disponibles para los filtros seleccionados")
 
-    # Crear el treemap
     if not treemap_data.empty:
         fig = px.treemap(treemap_data, path=['Provincia'], values='Total', title=title)
         col2.plotly_chart(fig)    
@@ -292,66 +266,36 @@ elif page == "🔍Exploración":
         
 
 
-
-
-
+    #Creación gráfico circular para pernoctaciones a lo largo de los meses 
     viajeros_filtered_subset = viajeros_filtered[
-    viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)
-    ]
+    viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)]
 
-    # Verificar si el filtro está seleccionado y si la opción es 'Viajeros'
     if 'Viajeros' in tipo_datos_filter and viajeros_pernoctaciones_filter:
-        # Obtener el total de residentes según el filtro seleccionado
         total_residentes = viajeros_filtered_subset.groupby('Residencia')['Total'].sum()
 
         # Crear un gráfico de pastel con los resultados
-        fig = px.pie(names=total_residentes.index, values=total_residentes.values, title='Distribución de Tipo de Residencia de Viajeros', color_discrete_sequence=['#32D7ED', '#7C32ED'])
+        fig = px.pie(names=total_residentes.index, values=total_residentes.values, title='Distribución de Tipo de Residencia de Viajeros',
+                     color_discrete_sequence=['#32D7ED', '#7C32ED'])
 
         # Configuración de la figura
         fig.update_layout(
             paper_bgcolor='rgba(14, 17, 23, 1)',
-            plot_bgcolor='rgba(14, 17, 23, 1)',
-        )
+            plot_bgcolor='rgba(14, 17, 23, 1)')
 
-        # Mostrar la figura en Streamlit
         st.plotly_chart(fig)
-    # Verificar si el filtro está seleccionado y si la opción es 'Pernoctaciones'
+        
     elif 'Pernoctaciones' in tipo_datos_filter and viajeros_pernoctaciones_filter:
-        # Obtener el total de pernoctaciones según el filtro seleccionado
         total_pernoctaciones = pernoctaciones_filtered.groupby('Residencia')['Total'].sum()
-
+        
         # Crear un gráfico de pastel con los resultados
         fig = px.pie(names=total_pernoctaciones.index, values=total_pernoctaciones.values, title='Distribución de Tipo de Residencia de Pernoctaciones', color_discrete_sequence=['#32D7ED', '#7C32ED'])
 
         # Configuración de la figura
         fig.update_layout(
             paper_bgcolor='rgba(14, 17, 23, 1)',
-            plot_bgcolor='rgba(14, 17, 23, 1)',
-        )
+            plot_bgcolor='rgba(14, 17, 23, 1)')
 
-        # Mostrar la figura en Streamlit
         st.plotly_chart(fig)
     else:
-        # Si no se selecciona un filtro válido, mostrar un mensaje o realizar otra acción
+
         st.write("Selecciona al menos un tipo de residencia y asegúrate de que el filtro de 'Viajeros/Pernoctaciones' está seleccionado para visualizar el gráfico de pastel.")
-
-
-
-
-
-  
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
