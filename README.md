@@ -1,30 +1,30 @@
 # Explorando tendencias y patrones del turimo español📊🌍
 
-![head](https://github.com/Carolina-MH/Project_Visualizacion/blob/main/img/encabezado.jpg)
+![head](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/home.mp4)
 
 Objetivo: Explorar la Evolución y Resiliencia del Turismo en España
 
 Mi misión era desentrañar las complejidades detrás del turismo español a lo largo de la última década, centrándome en preguntas clave:
 
-1. Evolución Histórica📊🔄: ¿Cómo ha cambiado el turismo desde 2014 hasta ahora?
+1.Evolución Histórica: ¿Cómo ha cambiado el turismo desde 2014 hasta ahora?
 
-2. Tendencia pernoctaciones y viajeros📉🗺️: ¿Cuáles son los patrones en pernoctaciones y la llegada de viajeros en las distintas provincias de España?
+2.Tendencia pernoctaciones y viajeros📉🗺️: ¿Cuáles son los patrones en pernoctaciones y la llegada de viajeros en las distintas provincias de España?
 
-3.Impacto del COVID-19 🦠🌍: ¿Cómo afectó la pandemia al turismo español? ¿Cuáles fueron las regiones más afectadas y cómo han evolucionado?
+3.Impacto del COVID-19: ¿Cómo afectó la pandemia al turismo español? ¿Cuáles fueron las regiones más afectadas y cómo han evolucionado?
 
-4.Correlación Clima-Turismo 🌡️🔗: ¿Existe una relación entre las condiciones climáticas y la actividad turística?
+4.Correlación Clima-Turismo: ¿Existe una relación entre las condiciones climáticas y la actividad turística?
 
-5.Recuperación Post-COVID 🚀🔍: ¿Qué provincias están mostrando signos de recuperación?
+5.Recuperación Post-COVID: ¿Qué provincias están mostrando signos de recuperación?
 
 6. Comparación Pre y Post-COVID 🔄📊: ¿Qué insights se pueden extraer al comparar datos antes y después del COVID-19?
 
 ## En Busca de Respuestas 🤔
 
-##### Evolución Histórica
+##### 📊🔄Evolución Histórica
 
 Exploré la transformación del turismo español desde 2014, identificando patrones y cambios significativos.
 
-##### Impacto del COVID-19
+##### 🦠🌍 Impacto del COVID-19
 
 En el año 2020, mi atención se centró en las cifras que documentaban el impacto del COVID-19 en el turismo español. Analizando detalladamente las pernoctaciones y la llegada de viajeros, se evidenció un descenso abrupto a partir de octubre de 2019, alcanzando su punto más bajo durante el verano de 2020. La imposición de restricciones y cierres de fronteras dejó una marca significativa en la afluencia de turistas, con un inicio de recuperación notorio a partir de abril de 2020 y un bajón nuevamente a partir de octubre de 2020. La situación tocó fondo en el verano de 2020, reflejando la aguda disminución de turistas debido a las medidas implementadas.
 
@@ -36,7 +36,7 @@ En la fase post-COVID, las cifras mostraron señales alentadoras de recuperació
 ## Detrás de los Números 📈🌦️
 
 
-![mapa](https://github.com/Carolina-MH/Project_Visualizacion/blob/main/img/Mapa.img)
+![mapa](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/Mapa.img)
 
 Al sumergirme en los datos, llegué a la conclusión de que las condiciones climáticas impactan directamente en la afluencia de turistas. Destinos como Madrid, Barcelona, Málaga, Granada y Alicante mantienen cierta actividad incluso en estaciones más frescas, posiblemente debido a razones laborales o comerciales.
 
