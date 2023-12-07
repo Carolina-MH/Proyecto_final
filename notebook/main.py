@@ -11,33 +11,21 @@ import webbrowser
 import base64
 import io
 
-
 # Cargar datos
 pernoctaciones = pd.read_csv('../data/ine_pernoctaciones.csv')
 viajeros = pd.read_csv('../data/ine_viajeros.csv')
 total = pd.read_csv('../data/ine_total.csv')
 clima = pd.read_csv('../data/clima.csv')
 
-
-
-
 # Configuración de página
-st.set_page_config(
-    page_title="Análisis de Datos de Turismo y Clima",
-    page_icon="📊"
+st.set_page_config(page_title="Análisis de Datos de Turismo y Clima", page_icon="📊")
 
-)
+#Configuración colores en la página
+background_color = "#262730"
+border_color = "#0068c9"
+selected_color = "#83c9ff"
+text_color = "#FFFFFF"
 
-
-# Filtro de periodo
-
-
-background_color = "#262730"  # Azul por defecto
-border_color = "#0068c9"  # Azul por defecto
-selected_color = "#83c9ff"  # Azul claro por defecto
-text_color = "#FFFFFF"  # Blanco por defecto
-
-# Aplicar el estilo personalizado
 custom_css = f"""
     <style>
         .st-bw {{
@@ -60,63 +48,64 @@ custom_css = f"""
         }}
     </style>
 """
-
-# Aplicar el estilo personalizado
 st.markdown(custom_css, unsafe_allow_html=True)
 
-
-
-
-
-
-
-
-
-
-
+#Creación multipages
 page = st.sidebar.radio("Selecciona una página", ["🏠Home", "🔥Mapa", "🔍Exploración"])
-
-# Página de Inicio para Introducir Datos
 if page == "🏠Home":
 
     st.title('Análisis de Datos de Turismo y Clima🧳🌤️')
     video_path= '../img/home.mp4'
     st.video(video_path)
-    # Breve Descripción
+    
     st.markdown("""Sumérgete en un viaje a través de los últimos 10 años y descubre cómo la industria turística en España ha enfrentado
     desafíos, se ha adaptado a cambios y ha emergido con nuevas perspectivas después del impacto del COVID-19.""")
-
-    # Secciones Destacadas
+    
     st.header('Secciones Destacadas')
     
-    # Evolución Histórica
     st.subheader('Evolución Histórica📊🔄')
     st.markdown("""Viaja en el tiempo y explora cómo el turismo ha evolucionado desde 2014 hasta hoy. Descubre los secretos de la industria
     a través de patrones y tendencias.""")
     
-    # Impacto del COVID-19
     st.subheader('Impacto del COVID-19 🦠🌍')
     st.markdown("""Descubre cómo la pandemia de COVID-19 ha impactado directamente en el turismo en España. Analiza los cambios en las
     pernoctaciones, la llegada de viajeros y las regiones más afectadas.""")
     
-    # Recuperación y Tendencias Actuales
     st.subheader('Recuperación y Tendencias Actuales 🚀🔍')
     st.markdown("""Despega hacia la fase post-COVID y observa cómo las provincias están mostrando signos de recuperación. Explora las
     nuevas tendencias que están definiendo el turismo actual en España.""")
     
     
 elif page == "🔥Mapa":
-    st.title('Mapa')
+    st.title('Destinos en el Mapa con Hexbin y Heatmap 🗺️🌡️')
     
-    # Mapa interactivo de Foursquare
+    #Cargar el mapa itneractivo de Foursquare
     foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
-    # Crear un iframe HTML para incrustar el mapa
     iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
-    # Mostrar el iframe en Streamlit
     st.markdown(iframe_html, unsafe_allow_html=True)
     
+    image_path = '../img/Leyenda.png'
+    image = st.image(image_path)
+    
+    st.subheader('Recuperación y Tendencias Actuales 🚀🔍')
+    st.markdown("""El heatmap revela una relación clara entre la temperatura y el flujo de viajeros. Cuando las temperaturas bajan,
+    disminuye la afluencia de turistas. Destacan provincias como Madrid, Barcelona, Málaga, Granada y Alicante, sugiriendo que estos
+    destinos mantienen cierta actividad incluso en estaciones más frescas, posiblemente debido a razones laborales o comerciales.
+    En contraste, las Islas Baleares muestran una marcada disminución en invierno, mientras que las Islas Canarias, con temperaturas más
+    cálidas, mantienen una afluencia constante.
+    El impacto del COVID-19 fue significativo en el turismo español. A partir de la declaración de la pandemia, la afluencia turística se
+    vio afectada por cierres de fronteras y restricciones de viaje. Notamos un declive notable a partir de octubre de 2019.La situación
+    alcanzó su punto más bajo durante el verano de 2020, reflejando la marcada disminución de turistas debido a las restricciones
+    implementadas. Sin embargo, a partir de abril de 2020, se evidencian signos de recuperación, mostrando la resiliencia del sector
+    turístico y la adaptabilidad a las nuevas condiciones.""")
+    
+    st.subheader('Ranking de Pernoctaciones: Destinos Más Populares 🌙✨')
+    st.markdown("""En el ámbito de pernoctaciones, las Islas Baleares lideran, seguidas por Las Palmas de Gran Canaria, Barcelona, Santa
+    Cruz de Tenerife, Madrid y Málaga. Estos destinos destacan por su atractivo natural, historia rica y una oferta variada que atrae tanto
+    a turistas de placer como a aquellos en busca de oportunidades laborales.""")
+    
 elif page == "🔍Exploración":
-    st.title('Exploración de Datos - Todas las Gráficas')    
+    st.title('1. Tendencias Temporales: Clima y Turismo')    
 
     st.sidebar.title('Filtros')
 
@@ -159,22 +148,7 @@ elif page == "🔍Exploración":
         (clima['Periodo'] <= fecha_fin)
     ]
     
-    
-    
-
-
-    # Mapa interactivo de Foursquare
-    foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
-    # Crear un iframe HTML para incrustar el mapa
-    iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
-    # Mostrar el iframe en Streamlit
-    st.markdown(iframe_html, unsafe_allow_html=True)
-    
-    
-    
-    
-    
-    
+ 
     # Visualizar datos
 
     col1, col2 = st.columns([1, 1]) 
