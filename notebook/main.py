@@ -78,7 +78,32 @@ page = st.sidebar.radio("Selecciona una página", ["🏠Home", "🔥Mapa", "🔍
 
 # Página de Inicio para Introducir Datos
 if page == "🏠Home":
-    st.title('Bienvenido al Análisis de Datos de Turismo y Clima🧳🌤️')
+
+    st.title('Análisis de Datos de Turismo y Clima🧳🌤️')
+    video_path= '../img/home.mp4'
+    st.video(video_path)
+    # Breve Descripción
+    st.markdown("""Sumérgete en un viaje a través de los últimos 10 años y descubre cómo la industria turística en España ha enfrentado
+    desafíos, se ha adaptado a cambios y ha emergido con nuevas perspectivas después del impacto del COVID-19.""")
+
+    # Secciones Destacadas
+    st.header('Secciones Destacadas')
+    
+    # Evolución Histórica
+    st.subheader('Evolución Histórica📊🔄')
+    st.markdown("""Viaja en el tiempo y explora cómo el turismo ha evolucionado desde 2014 hasta hoy. Descubre los secretos de la industria
+    a través de patrones y tendencias.""")
+    
+    # Impacto del COVID-19
+    st.subheader('Impacto del COVID-19 🦠🌍')
+    st.markdown("""Descubre cómo la pandemia de COVID-19 ha impactado directamente en el turismo en España. Analiza los cambios en las
+    pernoctaciones, la llegada de viajeros y las regiones más afectadas.""")
+    
+    # Recuperación y Tendencias Actuales
+    st.subheader('Recuperación y Tendencias Actuales 🚀🔍')
+    st.markdown("""Despega hacia la fase post-COVID y observa cómo las provincias están mostrando signos de recuperación. Explora las
+    nuevas tendencias que están definiendo el turismo actual en España.""")
+    
     
 elif page == "🔥Mapa":
     st.title('Mapa')
