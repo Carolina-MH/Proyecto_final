@@ -74,13 +74,23 @@ st.markdown(custom_css, unsafe_allow_html=True)
 
 
 
-page = st.sidebar.radio("Selecciona una página", ["Homepage", "Exploration"])
+page = st.sidebar.radio("Selecciona una página", ["🏠Home", "🔥Mapa", "🔍Exploración"])
 
 # Página de Inicio para Introducir Datos
-if page == "Homepage":
+if page == "🏠Home":
     st.title('Bienvenido al Análisis de Datos de Turismo y Clima🧳🌤️')
     
-elif page == "Exploration":
+elif page == "🔥Mapa":
+    st.title('Mapa')
+    
+    # Mapa interactivo de Foursquare
+    foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
+    # Crear un iframe HTML para incrustar el mapa
+    iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
+    # Mostrar el iframe en Streamlit
+    st.markdown(iframe_html, unsafe_allow_html=True)
+    
+elif page == "🔍Exploración":
     st.title('Exploración de Datos - Todas las Gráficas')    
 
     st.sidebar.title('Filtros')
@@ -123,8 +133,20 @@ elif page == "Exploration":
         (clima['Periodo'] >= fecha_inicio) & 
         (clima['Periodo'] <= fecha_fin)
     ]
+    
+    
+    
 
 
+    # Mapa interactivo de Foursquare
+    foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
+    # Crear un iframe HTML para incrustar el mapa
+    iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
+    # Mostrar el iframe en Streamlit
+    st.markdown(iframe_html, unsafe_allow_html=True)
+    
+    
+    
     
     
     
@@ -319,12 +341,7 @@ elif page == "Exploration":
 
 
   
-    # Mapa interactivo de Foursquare
-    foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
-    # Crear un iframe HTML para incrustar el mapa
-    iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
-    # Mostrar el iframe en Streamlit
-    st.markdown(iframe_html, unsafe_allow_html=True)
+    
 
 
 
