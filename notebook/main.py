@@ -20,6 +20,7 @@ clima = pd.read_csv('../data/clima.csv')
 
 
 
+
 # Configuración de página
 st.set_page_config(
     page_title="Análisis de Datos de Turismo y Clima",
@@ -27,6 +28,41 @@ st.set_page_config(
 
 )
 
+
+# Filtro de periodo
+
+
+background_color = "#262730"  # Azul por defecto
+border_color = "#0068c9"  # Azul por defecto
+selected_color = "#83c9ff"  # Azul claro por defecto
+text_color = "#FFFFFF"  # Blanco por defecto
+
+# Aplicar el estilo personalizado
+custom_css = f"""
+    <style>
+        .st-bw {{
+            background-color: {background_color} !important; /* Fondo de la caja */
+        }}
+        .st-c7, .st-ec, .st-dh {{
+            border: 1px solid {border_color} !important; /* Bordes y línea alrededor de la caja */
+        }}
+        .st-ew, .st-e0, .st-c2.st-c5.st-dq.st-ew.st-ex.st-c4.st-dw.st-e0.st-c7 {{
+            background-color: {selected_color} !important; /* Fondo de las opciones seleccionadas */
+            color: {text_color} !important;
+        }}
+        .css-145kmo2 {{
+            background-color: {background_color} !important; /* Fondo de la selección de página */
+            color: {text_color} !important; /* Texto blanco para la selección de página */
+        }}
+        .st-ci {{
+            background-color: #404040 !important; /* Fondo gris oscuro para la barra lateral en la página "Exploration" */
+            color: #FFFFFF !important; /* Texto blanco para la barra lateral en la página "Exploration" */
+        }}
+    </style>
+"""
+
+# Aplicar el estilo personalizado
+st.markdown(custom_css, unsafe_allow_html=True)
 
 
 
@@ -124,10 +160,10 @@ elif page == "Exploration":
     # Verificar qué tipo de datos se ha seleccionado y agregar barras correspondientes
     if 'Pernoctaciones' in tipo_datos_filter:
         fig.add_bar(x=total_pernoctaciones['Provincia'], y=total_pernoctaciones['Total'],
-                    name='Pernoctaciones', marker_color='#45E3E2', marker_line_color='black', marker_line_width=1)
+                    name='Pernoctaciones', marker_color='#83c9ff', marker_line_color='black', marker_line_width=1)
     if 'Viajeros' in tipo_datos_filter:
         fig.add_bar(x=total_viajeros['Provincia'], y=total_viajeros['Total'],
-                    name='Viajeros', marker_color='#1500FF', marker_line_color='black', marker_line_width=1)
+                    name='Viajeros', marker_color='#0068c9', marker_line_color='black', marker_line_width=1)
     # Configuración de la figura
     fig.update_layout(
         title=f'Total Sumatorio de {", ".join(tipo_datos_filter)} por Provincia',
@@ -152,7 +188,7 @@ elif page == "Exploration":
     # Verificar si el filtro es 'Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', o 'Media_tmax'
     if clima_tipo_datos_filter in ['Media_tmed', 'Media_prec', 'Media_sol', 'Media_tmin', 'Media_tmax']:
     # Crear un diagrama de caja con los resultados
-        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#1500FF'], points="all", title=f'Distribución de {clima_tipo_datos_filter} por Provincia')
+        fig = px.box(clima_filtered, x='Provincia', y=clima_tipo_datos_filter, color_discrete_sequence=['#ffabab'], points="all", title=f'Distribución de {clima_tipo_datos_filter} por Provincia')
 
         # Configuración de la figura
         fig.update_layout(
@@ -164,7 +200,10 @@ elif page == "Exploration":
             yaxis=dict(gridcolor='white'),
         )
         
-        fig.update_traces(marker=dict(color='#7936D9'), boxmean="sd")
+        fig.update_traces(
+        boxmean="sd",  # Tipo de línea para la media y la línea del borde de la caja
+        line_color='black',  # Color de la línea del borde de la caja, la línea de la media y los bigotes
+    )
     
         # Mostrar la figura en Streamlit
         col2.plotly_chart(fig)
@@ -235,18 +274,17 @@ elif page == "Exploration":
 
 
 
-    # Crear subset antes de su uso
     viajeros_filtered_subset = viajeros_filtered[
-    viajeros_filtered['Residencia'].isin(['Espana', 'Extranjero'])]
+    viajeros_filtered['Residencia'].isin(viajeros_pernoctaciones_filter)
+    ]
 
-    # Verificar si el filtro es 'España' o 'Extranjero'
-    if 'Espana' in viajeros_pernoctaciones_filter or 'Extranjero' in viajeros_pernoctaciones_filter:
-        # Obtener el total de residentes en España y en el extranjero
-        total_espana = viajeros_filtered_subset[viajeros_filtered_subset['Residencia'] == 'Espana']['Total'].sum()
-        total_extranjero = viajeros_filtered_subset[viajeros_filtered_subset['Residencia'] == 'Extranjero']['Total'].sum()
+    # Verificar si el filtro está seleccionado y si la opción es 'Viajeros'
+    if 'Viajeros' in tipo_datos_filter and viajeros_pernoctaciones_filter:
+        # Obtener el total de residentes según el filtro seleccionado
+        total_residentes = viajeros_filtered_subset.groupby('Residencia')['Total'].sum()
 
         # Crear un gráfico de pastel con los resultados
-        fig = px.pie(names=['España', 'Extranjero'], values=[total_espana, total_extranjero], title='Distribución de Tipo de Residencia de Viajeros', color_discrete_sequence=['#4C0035', '#B72F15'])
+        fig = px.pie(names=total_residentes.index, values=total_residentes.values, title='Distribución de Tipo de Residencia de Viajeros', color_discrete_sequence=['#32D7ED', '#7C32ED'])
 
         # Configuración de la figura
         fig.update_layout(
@@ -255,10 +293,26 @@ elif page == "Exploration":
         )
 
         # Mostrar la figura en Streamlit
-        col2.plotly_chart(fig)
+        st.plotly_chart(fig)
+    # Verificar si el filtro está seleccionado y si la opción es 'Pernoctaciones'
+    elif 'Pernoctaciones' in tipo_datos_filter and viajeros_pernoctaciones_filter:
+        # Obtener el total de pernoctaciones según el filtro seleccionado
+        total_pernoctaciones = pernoctaciones_filtered.groupby('Residencia')['Total'].sum()
+
+        # Crear un gráfico de pastel con los resultados
+        fig = px.pie(names=total_pernoctaciones.index, values=total_pernoctaciones.values, title='Distribución de Tipo de Residencia de Pernoctaciones', color_discrete_sequence=['#32D7ED', '#7C32ED'])
+
+        # Configuración de la figura
+        fig.update_layout(
+            paper_bgcolor='rgba(14, 17, 23, 1)',
+            plot_bgcolor='rgba(14, 17, 23, 1)',
+        )
+
+        # Mostrar la figura en Streamlit
+        st.plotly_chart(fig)
     else:
-        # Si el filtro no es 'España' ni 'Extranjero', mostrar un mensaje o realizar otra acción
-        col2.write("Selecciona 'España' o 'Extranjero' en el filtro para visualizar el gráfico de pastel.")
+        # Si no se selecciona un filtro válido, mostrar un mensaje o realizar otra acción
+        st.write("Selecciona al menos un tipo de residencia y asegúrate de que el filtro de 'Viajeros/Pernoctaciones' está seleccionado para visualizar el gráfico de pastel.")
 
 
 
