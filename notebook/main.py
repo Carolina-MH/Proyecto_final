@@ -54,16 +54,16 @@ st.markdown(custom_css, unsafe_allow_html=True)
 page = st.sidebar.radio("Selecciona una página", ["🏠Home", "🔥Mapa", "🔍Exploración"])
 if page == "🏠Home":
 
-    st.title('Análisis de Datos de Turismo y Clima🧳🌤️')
+    st.title('Análisis de Datos de turismo y clima🧳🌤️')
     video_path= '../img/home.mp4'
     st.video(video_path)
     
     st.markdown("""Sumérgete en un viaje a través de los últimos 10 años y descubre cómo la industria turística en España ha enfrentado
     desafíos, se ha adaptado a cambios y ha emergido con nuevas perspectivas después del impacto del COVID-19.""")
     
-    st.header('Secciones Destacadas')
+    st.header('Secciones destacadas')
     
-    st.subheader('Evolución Histórica📊🔄')
+    st.subheader('Evolución histórica📊🔄')
     st.markdown("""Viaja en el tiempo y explora cómo el turismo ha evolucionado desde 2014 hasta hoy. Descubre los secretos de la industria
     a través de patrones y tendencias.""")
     
@@ -71,13 +71,13 @@ if page == "🏠Home":
     st.markdown("""Descubre cómo la pandemia de COVID-19 ha impactado directamente en el turismo en España. Analiza los cambios en las
     pernoctaciones, la llegada de viajeros y las regiones más afectadas.""")
     
-    st.subheader('Recuperación y Tendencias Actuales 🚀🔍')
+    st.subheader('Recuperación y tendencias actuales 🚀🔍')
     st.markdown("""Despega hacia la fase post-COVID y observa cómo las provincias están mostrando signos de recuperación. Explora las
     nuevas tendencias que están definiendo el turismo actual en España.""")
     
     
 elif page == "🔥Mapa":
-    st.title('Destinos en el Mapa con Hexbin y Heatmap 🗺️🌡️')
+    st.title('Destinos en el mapa con Hexbin y Heatmap 🗺️🌡️')
     
     #Cargar el mapa itneractivo de Foursquare
     foursquare_map_url = "https://studio.foursquare.com/public/a8a7e4bf-fc29-4962-b9ea-74c4458d7d34"
@@ -87,7 +87,7 @@ elif page == "🔥Mapa":
     image_path = '../img/Leyenda.png'
     image = st.image(image_path)
     
-    st.subheader('Recuperación y Tendencias Actuales 🚀🔍')
+    st.subheader('Recuperación y tendencias actuales 🚀🔍')
     st.markdown("""El heatmap revela una relación clara entre la temperatura y el flujo de viajeros. Cuando las temperaturas bajan,
     disminuye la afluencia de turistas. Destacan provincias como Madrid, Barcelona, Málaga, Granada y Alicante, sugiriendo que estos
     destinos mantienen cierta actividad incluso en estaciones más frescas, posiblemente debido a razones laborales o comerciales.
