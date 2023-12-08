@@ -57,7 +57,7 @@ Las Islas Baleares, por otro lado, experimentan una marcada disminución en invi
 - [Library Request](https://pypi.org/project/requests/)
 - [Library Numpy](https://numpy.org/)
 - [Api AEMET](https://opendata.aemet.es/centrodedescargas/inicio)
-- [CSV INE](https://www.ine.es/jaxiT3/Tabla.htm?t=2074#downloadJSON=true)
+- [INE](https://www.ine.es/jaxiT3/Tabla.htm?t=2074#downloadJSON=true)
 - [Streamlit](https://streamlit.io/)
 - [Foursquare studio](https://studio.foursquare.com/home)
 - [Vídeo presentación]

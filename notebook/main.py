@@ -49,7 +49,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 page = st.sidebar.radio("Selecciona una página", ["🏠Home", "🔥Mapa", "🔍Exploración"])
 if page == "🏠Home":
 
-    st.title('Análisis de Datos de turismo y clima🧳🌤️')
+    st.title('Análisis de datos del turismo y clima en España🧳🌤️')
     video_path= '../img/home.mp4'
     st.video(video_path)
     
