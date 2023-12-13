@@ -7,10 +7,10 @@ import pylab as plt
 
 
 # Cargar datos
-pernoctaciones = pd.read_csv('../data/ine_pernoctaciones.csv')
-viajeros = pd.read_csv('../data/ine_viajeros.csv')
-total = pd.read_csv('../data/ine_total.csv')
-clima = pd.read_csv('../data/clima.csv')
+pernoctaciones = pd.read_csv('data/ine_pernoctaciones.csv')
+viajeros = pd.read_csv('data/ine_viajeros.csv')
+total = pd.read_csv('data/ine_total.csv')
+clima = pd.read_csv('data/clima.csv')
 
 # Configuración de página
 st.set_page_config(page_title="Análisis de Datos de Turismo y Clima", page_icon="📊")
@@ -50,7 +50,7 @@ page = st.sidebar.radio("Selecciona una página", ["🏠Home", "🔥Mapa", "🔍
 if page == "🏠Home":
 
     st.title('Análisis de datos del turismo y clima en España🧳🌤️')
-    video_path= '../img/home.mp4'
+    video_path= 'img/home.mp4'
     st.video(video_path)
     
     st.markdown("""Sumérgete en un viaje a través de los últimos 10 años y descubre cómo la industria turística en España ha enfrentado
@@ -79,7 +79,7 @@ elif page == "🔥Mapa":
     iframe_html = f'<iframe src="{foursquare_map_url}" width="100%" height="600"></iframe>'
     st.markdown(iframe_html, unsafe_allow_html=True)
     
-    image_path = '../img/Leyenda.png'
+    image_path = 'img/Leyenda.png'
     image = st.image(image_path)
     
     st.subheader('Recuperación y tendencias actuales 🚀🔍')

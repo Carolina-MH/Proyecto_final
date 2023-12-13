@@ -1,4 +1,4 @@
-# Explorando tendencias y patrones del turimo español📊🌍
+# Explorando tendencias y patrones del turismo español📊🌍
 
 ![head](https://github.com/Carolina-MH/Proyecto_final/blob/main/img/gif.gif)
 
