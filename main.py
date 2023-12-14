@@ -5,7 +5,6 @@ import seaborn as sns
 from PIL import Image
 import pylab as plt
 
-
 # Cargar datos
 pernoctaciones = pd.read_csv('data/ine_pernoctaciones.csv')
 viajeros = pd.read_csv('data/ine_viajeros.csv')
