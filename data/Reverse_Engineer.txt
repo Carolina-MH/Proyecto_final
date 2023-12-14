@@ -1,0 +1,111 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema turismo
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema turismo
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `turismo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `turismo` ;
+
+-- -----------------------------------------------------
+-- Table `turismo`.`clima`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `turismo`.`clima` (
+  `Provincia` VARCHAR(55) NOT NULL,
+  `Periodo` DATE NULL,
+  `Media_tmed` DOUBLE NULL DEFAULT NULL,
+  `Media_prec` DOUBLE NULL DEFAULT NULL,
+  `Media_sol` DOUBLE NULL DEFAULT NULL,
+  `Media_tmin` DOUBLE NULL DEFAULT NULL,
+  `Media_tmax` DOUBLE NULL DEFAULT NULL,
+  `Población` BIGINT NULL DEFAULT NULL,
+  `Latitud` DOUBLE NULL DEFAULT NULL,
+  `Longitud` DOUBLE NULL DEFAULT NULL,
+  PRIMARY KEY (`Provincia`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `turismo`.`total`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `turismo`.`total` (
+  `Periodo` DATE NULL,
+  `Totales_Territoriales` VARCHAR(55) NOT NULL,
+  `Comunidades_Ciudades_Autonomas` TEXT NULL DEFAULT NULL,
+  `Provincia` VARCHAR(55) NOT NULL,
+  `Viajeros_Pernoctaciones` TEXT NULL DEFAULT NULL,
+  `Residencia` TEXT NULL DEFAULT NULL,
+  `Total` BIGINT NULL DEFAULT NULL,
+  PRIMARY KEY (`Totales_Territoriales`, `Provincia`),
+  INDEX `Provincia_idx` (`Provincia` ASC) VISIBLE,
+  CONSTRAINT `Provincia`
+    FOREIGN KEY (`Provincia`)
+    REFERENCES `turismo`.`clima` (`Provincia`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `turismo`.`pernoctaciones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `turismo`.`pernoctaciones` (
+  `Totales_Territoriales` VARCHAR(55) NOT NULL,
+  `Comunidades_Ciudades_Autonomas` TEXT NULL DEFAULT NULL,
+  `Provincia` VARCHAR(55) NOT NULL,
+  `Viajeros_Pernoctaciones` TEXT NULL DEFAULT NULL,
+  `Residencia` TEXT NULL DEFAULT NULL,
+  `Periodo` DATE NULL,
+  `Total` BIGINT NULL DEFAULT NULL,
+  PRIMARY KEY (`Provincia`, `Totales_Territoriales`),
+  INDEX `Totales_Territoriales_idx` (`Totales_Territoriales` ASC) VISIBLE,
+  CONSTRAINT `Totales_Territoriales`
+    FOREIGN KEY (`Totales_Territoriales`)
+    REFERENCES `turismo`.`total` (`Totales_Territoriales`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `turismo`.`viajeros`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `turismo`.`viajeros` (
+  `Totales_Territoriales` VARCHAR(55) NOT NULL,
+  `Comunidades_Ciudades_Autonomas` TEXT NULL DEFAULT NULL,
+  `Provincia` VARCHAR(55) NOT NULL,
+  `Viajeros_Pernoctaciones` TEXT NULL DEFAULT NULL,
+  `Residencia` TEXT NULL DEFAULT NULL,
+  `Periodo` DATE NULL,
+  `Total` BIGINT NULL DEFAULT NULL,
+  PRIMARY KEY (`Provincia`, `Totales_Territoriales`),
+  INDEX `Totales_Territoriales_idx` (`Totales_Territoriales` ASC) VISIBLE,
+  CONSTRAINT `Totales_Territoriales_`
+    FOREIGN KEY (`Totales_Territoriales`)
+    REFERENCES `turismo`.`total` (`Totales_Territoriales`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

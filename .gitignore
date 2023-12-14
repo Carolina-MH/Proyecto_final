@@ -1,5 +1,8 @@
 # Jupyter Notebook
 .ipynb_checkpoints
-*.txt
+api.txt
+api_suite.txt
+password.txt
+SQL_pass.txt
 
 
